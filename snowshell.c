@@ -40,6 +40,24 @@ int main(void) {
             return args[1] ? atoi(args[1]) : 0;
         }
 
+        if (strcmp(args[0], "cd") == 0) {
+            if (!args[1]) {
+                goto end_loop;
+            }
+
+            res = chdir(args[1]);
+
+            if (res != 0) {
+                if (errno == 2) {
+                    printf("cd: The directory '%s' does not exist\n", args[1]);
+                } else {
+                    printf("cd: Failed to change directory\n");
+                }
+            }
+
+            goto end_loop;
+        }
+
         if (fork() == 0) {
             res = execvp(args[0], args);
             // no such file or directory
@@ -49,6 +67,7 @@ int main(void) {
             return 0;
         }
         wait(&res);
+end_loop:
         free(args);
         n_spaces = 0;
     }
