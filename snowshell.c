@@ -1,11 +1,13 @@
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 int main(void) {
     char input[4096];
+    char *args[] = {input, NULL};
     int res = 0;
-    pid_t child_pid, wpid;
 
     while (true) {
         printf("⛄️ ");
@@ -17,11 +19,16 @@ int main(void) {
             return 0;
         }
 
-        if ((child_pid = fork()) == 0) {
-            execvp(input, NULL);
+        if (fork() == 0) {
+            res = execvp(input, args);
+            // no such file or directory
+            if (res == -1 && errno == 2) {
+                printf("🌲⛷  %s: command not found\n", input);
+            }
             return 0;
         }
-        wpid = wait(&res);
+        wait(&res);
     }
+
     return 0;
 }
