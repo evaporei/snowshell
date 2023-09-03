@@ -1,12 +1,12 @@
+#include <stdbool.h>
 #include <stdio.h>
 
-#define PROJECT_NAME "snowshell"
-
-int main(int argc, char **argv) {
-    if(argc != 1) {
-        printf("%s takes no arguments.\n", argv[0]);
-        return 1;
+int main(void) {
+    char input[4096];
+    while (true) {
+        printf("⛄️ ");
+        scanf("%4096s", input);
+        printf("%s\n", input);
     }
-    printf("This is project %s.\n", PROJECT_NAME);
     return 0;
 }
