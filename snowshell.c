@@ -36,6 +36,10 @@ int main(void) {
         args = realloc(args, sizeof(char *) * n_spaces + 1);
         args[n_spaces] = 0;
 
+        if (strcmp(args[0], "exit") == 0) {
+            return args[1] ? atoi(args[1]) : 0;
+        }
+
         if (fork() == 0) {
             res = execvp(args[0], args);
             // no such file or directory
