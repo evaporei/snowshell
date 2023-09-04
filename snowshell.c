@@ -10,11 +10,7 @@ static volatile pid_t child_pid = 0;
 
 // this only gets called in the parent process context
 void int_handler(int dummy) {
-    // parent
-    if (child_pid == 0) {
-        exit(0);
-    // child
-    } else {
+    if (child_pid != 0) {
         kill(child_pid, SIGTERM);
         printf("\n");
     }
