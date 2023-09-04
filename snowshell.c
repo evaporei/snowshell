@@ -59,7 +59,7 @@ int main(void) {
 
         if (strcmp(args[0], "cd") == 0) {
             if (!args[1]) {
-                goto end_loop;
+                goto cleanup;
             }
 
             res = chdir(args[1]);
@@ -72,7 +72,7 @@ int main(void) {
                 }
             }
 
-            goto end_loop;
+            goto cleanup;
         }
 
         child_pid = fork();
@@ -85,7 +85,7 @@ int main(void) {
             return 0;
         }
         wait(&res);
-end_loop:
+cleanup:
         free(args);
         args = NULL;
         n_spaces = 0;
