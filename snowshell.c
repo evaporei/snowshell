@@ -6,11 +6,27 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+static volatile pid_t child_pid = 0;
+
+// this only gets called in the parent process context
+void int_handler(int dummy) {
+    // parent
+    if (child_pid == 0) {
+        exit(0);
+    // child
+    } else {
+        kill(child_pid, SIGTERM);
+        printf("\n");
+    }
+}
+
 int main(void) {
     char input[4096];
     char **args = NULL;
     char *buf;
     int res = 0, n_spaces = 0;
+
+    signal(SIGINT, int_handler);
 
     while (true) {
         printf("⛄️ ");
@@ -58,7 +74,8 @@ int main(void) {
             goto end_loop;
         }
 
-        if (fork() == 0) {
+        child_pid = fork();
+        if (child_pid == 0) {
             res = execvp(args[0], args);
             // no such file or directory
             if (res == -1 && errno == 2) {
@@ -70,6 +87,7 @@ int main(void) {
 end_loop:
         free(args);
         n_spaces = 0;
+        child_pid = 0;
     }
 
     return 0;
