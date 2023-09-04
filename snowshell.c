@@ -49,6 +49,11 @@ int main(void) {
             buf = strtok(NULL, " ");
         }
 
+        // empty Enter/Return key pressed
+        if (args == NULL) {
+            continue;
+        }
+
         args = realloc(args, sizeof(char *) * n_spaces + 1);
         args[n_spaces] = 0;
 
@@ -86,6 +91,7 @@ int main(void) {
         wait(&res);
 end_loop:
         free(args);
+        args = NULL;
         n_spaces = 0;
         child_pid = 0;
     }
